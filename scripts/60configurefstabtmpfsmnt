@@ -1,0 +1,33 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+cat >> $TARGET/etc/fstab << EOF
+tmpfs          /mnt            tmpfs   defaults          0       0
+EOF
+
+
+exit 0
+}
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

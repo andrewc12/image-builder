@@ -1,0 +1,34 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+echo "BOOT"
+echo "ROOT"
+}
+function check {
+echo "TARGET=$TARGET"
+echo "BOOT=$BOOT"
+echo "ROOT=$ROOT"
+}
+function start {
+mkdir $TARGET
+mount $ROOT $TARGET
+mkdir $TARGET/boot
+mount $BOOT $TARGET/boot
+exit 0
+}
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

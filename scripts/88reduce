@@ -1,0 +1,101 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+#reduce
+#92420
+df -h $TARGET/boot
+cd $TARGET/boot
+for i in $(echo linux-image-*-kirkwood-tld-1_1_armel.deb linux-headers-*-kirkwood-tld-1_1_armel.deb config-*-kirkwood-tld-1 zImage-*-kirkwood-tld-1 linux-dtb-*-kirkwood-tld-1.tar linux-*-kirkwood-tld-1.patch dts/ zImage.fdt initrd.img-*-kirkwood-tld-1 linux-*-kirkwood-tld-1-bodhi.tar.bz2 vmlinuz-*-kirkwood-tld-1 System.map-*-kirkwood-tld-1)
+do
+echo $i
+rm -rv $i
+done
+#8716
+df -h $TARGET/boot
+#There is a huge amount of modules installed in lib/modules/3.17.0-kirkwood-tld-1/kernel 
+cd $TARGET
+
+#304076
+df -h $TARGET
+find usr/share/doc -depth -type f ! -name copyright|xargs rm || true
+find usr/share/doc -empty|xargs rmdir || true
+#rm -r /usr/share/doc/*
+#about 1 mb
+rm -rf usr/share/man usr/share/groff usr/share/info usr/share/lintian usr/share/linda var/cache/man
+find usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en*' |xargs rm -r
+rm -r var/lib/apt/lists/*
+rm -r var/cache/apt/archives/*
+#maybe bad idea
+rm -r var/cache/apt/pkgcache.bin
+rm -r var/cache/apt/srcpkgcache.bin
+#apt-get autoremove --purge
+rm -r var/log/*
+rm -r var/cache/debconf/*
+rm -r var/lib/apt/lists/*
+#188244 
+df -h $TARGET
+
+rm -r lib/modules/*-kirkwood-tld-1/kernel/drivers/net/wireless 
+rm -r lib/modules/*-kirkwood-tld-1/kernel/drivers/media/dvb-frontends 
+rm -r lib/modules/*-kirkwood-tld-1/kernel/drivers/media/usb
+rm -r lib/modules/*-kirkwood-tld-1/kernel/drivers/media/staging
+
+#179284
+df -h $TARGET
+#http://stackoverflow.com/questions/16869024/what-is-pycache
+#You can also add the environment variable PYTHONDONTWRITEBYTECODE=<any_value> to suppress it permanently. –  Mark Tolonen Jun 1 '13 at 15:29
+#http://comments.gmane.org/gmane.comp.embedded.openwrt.devel/28134
+#echo 'export PYTHONDONTWRITEBYTECODE=1' >> etc/profile
+find . -name '*.pyc' -delete
+#169984
+df -h $TARGET
+
+#configure
+
+
+
+
+
+
+
+
+#chroot ./ apt-get update
+#chroot ./ apt-get purge manpages man-db groff-base tasksel tasksel-data aptitude aptitude-common nano rsyslog libxapian22 libept1.4.12 discover discover-data libdiscover2 libexpat1 debconf-i18n logrotate installation-report wireless-tools libiw30 eject
+
+#apt-get clean
+
+#apt-get install --no-install-recommends u-boot-tools mdadm lvm2 openssh-server samba nfs-kernel-server
+#apt-get install initramfs-tools 
+#chroot ./ apt-get install initramfs-tools u-boot-tools openssh-server
+
+#dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
+exit 0
+}
+
+
+
+
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

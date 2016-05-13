@@ -1,0 +1,46 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+mkdir $TARGET/tmp
+cd $TARGET/tmp
+wget --no-check-certificate https://www.dropbox.com/s/abk2qxve19kzzsa/linux-4.0.0-kirkwood-tld-2-bodhi.tar.bz2
+tar -xvf linux-4.0.0-kirkwood-tld-2-bodhi.tar.bz2
+cd $TARGET
+
+mv $TARGET/tmp/zImage-3.18.5-kirkwood-tld-1 $TARGET/boot/.
+chroot ./ dpkg -i tmp/linux-image-3.18.5-kirkwood-tld-1_1_armel.deb
+chroot ./ dpkg -i tmp/linux-headers-3.18.5-kirkwood-tld-1_1_armel.deb
+
+cd boot
+
+tar -xvf ../tmp/linux-dtb-3.18.5-kirkwood-tld-1.tar
+ln -s . boot
+
+rm $TARGET/tmp/*
+exit 0
+}
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

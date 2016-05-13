@@ -1,0 +1,35 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+echo "HOSTNAME"
+}
+function check {
+echo "TARGET=$TARGET"
+echo "HOSTNAME=$HOSTNAME"
+}
+function start {
+cd $TARGET
+cat > $TARGET/etc/hostname << EOF
+$HOSTNAME
+EOF
+exit 0
+}
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

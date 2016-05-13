@@ -1,0 +1,40 @@
+#!/bin/bash
+function vars {
+echo "DRIVE"
+}
+function check {
+echo "DRIVE=$DRIVE"
+}
+function start {
+fdisk $DRIVE <<EOF
+o
+n
+p
+1
+
++256M
+n
+p
+2
+
+
+w
+EOF
+exit 0
+}
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

@@ -1,0 +1,30 @@
+#!/bin/bash
+function vars {
+}
+function check {
+}
+function start {
+}
+
+
+
+
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

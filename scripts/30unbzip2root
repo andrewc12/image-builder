@@ -1,0 +1,39 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+umount proc/
+umount sys/
+umount dev/
+tar -jxvf ../rootfs.tbz2 
+
+cd $TARGET
+mount -t proc proc proc/
+mount -t sysfs sys sys/
+mount -o bind /dev dev/
+exit 0
+}
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

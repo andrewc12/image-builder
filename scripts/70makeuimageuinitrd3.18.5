@@ -1,0 +1,40 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+chroot $TARGET update-initramfs -k 3.18.5-kirkwood-tld-1 -c -t
+chroot $TARGET update-initramfs -k 3.18.5-kirkwood-tld-1 -u -t
+
+cd boot
+cp -a zImage-3.18.5-kirkwood-tld-1  zImage.fdt
+cat dts/kirkwood-pogoplug_v4.dtb  >> zImage.fdt
+mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n Linux-3.18.5-kirkwood-tld-1 -d ./zImage.fdt ./uImage
+mkimage -A arm -O linux -T ramdisk -C gzip -a 0x00000000 -e 0x00000000 -n initramfs-3.18.5-kirkwood-tld-1 -d ./initrd.img-3.18.5-kirkwood-tld-1 ./uInitrd
+ln -s . boot
+
+exit 0
+}
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

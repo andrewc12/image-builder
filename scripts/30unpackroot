@@ -1,0 +1,41 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+wget --no-check-certificate  https://www.dropbox.com/s/wzvkbdy0vmi7jc6/Debian-3.18.5-kirkwood-tld-1-rootfs-bodhi.tar.bz2
+tar -xvf Debian-3.18.5-kirkwood-tld-1-rootfs-bodhi.tar.bz2
+rm Debian-3.18.5-kirkwood-tld-1-rootfs-bodhi.tar.bz2
+mount -t proc proc proc/
+mount -t sysfs sys sys/
+mount -o bind /dev dev/
+cp /etc/resolv.conf etc/resolv.conf
+
+cd boot
+ln -s . boot
+
+exit 0
+}
+
+
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

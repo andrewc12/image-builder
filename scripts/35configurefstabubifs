@@ -1,0 +1,36 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+
+}
+function check {
+echo "TARGET=$TARGET"
+
+}
+function start {
+cd $TARGET
+cat > $TARGET/etc/fstab << EOF
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+ubi0:rootfs  /               ubifs   defaults,noatime,rw                    0 0
+tmpfs          /tmp            tmpfs   defaults          0       0
+EOF
+exit 0
+}
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

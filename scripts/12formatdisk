@@ -1,0 +1,32 @@
+#!/bin/bash
+function vars {
+echo "BOOT"
+echo "ROOT"
+}
+function check {
+echo "BOOT=$BOOT"
+echo "ROOT=$ROOT"
+}
+function start {
+
+mkfs.ext2 $BOOT
+mkfs.f2fs $ROOT
+
+exit 0
+}
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac

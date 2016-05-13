@@ -1,0 +1,37 @@
+#!/bin/bash
+function vars {
+echo "TARGET"
+}
+function check {
+echo "TARGET=$TARGET"
+}
+function start {
+cd $TARGET
+
+cat > $TARGET/etc/sysctl.conf << EOF
+
+vm.dirty_background_ratio = 10
+vm.dirty_ratio = 50
+vm.min_free_kbytes = 8192
+EOF
+
+
+exit 0
+}
+
+
+case "$1" in
+  "vars")
+    vars
+    ;;
+  "check")
+    check
+    ;;
+  "start")
+    start
+    ;;
+  *)
+    echo "Usage: `basename $0` (vars | check | start)"
+    exit 1
+    ;;
+esac
